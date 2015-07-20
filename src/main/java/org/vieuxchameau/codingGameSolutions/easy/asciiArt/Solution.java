@@ -6,52 +6,69 @@ import java.util.Scanner;
 
 class Solution {
 
-    public static final char UNKNOW_KEY = '?';
+	private static final char UNKNOWN_KEY = '?';
 
-    public static void main(String args[]) {
-        Scanner in = new Scanner(System.in);
-        int L = in.nextInt(); // the width L of a letter represented in ASCII art
-        in.nextLine();
-        int H = in.nextInt(); // the height H of a letter represented in ASCII art
-        in.nextLine();
-        String T = in.nextLine(); // The line of text T, composed of N ASCII characters.
-        Map<Character, String[]> mapping = initMapping(H);
-        for (int i = 0; i < H; i++) {
-            String ROW = in.nextLine();
-            addRow(mapping, ROW, L, i);
-        }
+	private static final int NB_LETTERS_IN_ALPHABET = 26;
 
-        char[] chars = T.toLowerCase().toCharArray();
-        for (int i = 0; i < H; i++) {
-            StringBuilder buf = new StringBuilder("");
-            for (char c : chars) {
-                String[] lines = mapping.get(c);
-                if (lines == null) {
-                    lines = mapping.get(UNKNOW_KEY);
-                }
-                buf.append(lines[i]);
-            }
-            System.out.println(buf.toString());
-        }
+	public static void main(final String args[]) {
+		final Scanner in = new Scanner(System.in);
+		final int letterWidth = in.nextInt(); // the width L of a letter represented in ASCII art
+		in.nextLine();
+		final int letterHeight = in.nextInt(); // the height H of a letter represented in ASCII art
+		in.nextLine();
+		final String text = in.nextLine(); // The line of text T, composed of N ASCII characters.
+		final Map<Character, String[]> alphabetMapping = initAlphabetMapping(letterHeight);
+		for (int rowIndex = 0; rowIndex < letterHeight; rowIndex++) {
+			final String row = in.nextLine();
+			addRowToMapping(alphabetMapping, row, letterWidth, rowIndex);
+		}
 
-    }
+		showTextInAsciiArt(text, letterHeight, alphabetMapping);
+	}
 
-    private static void addRow(final Map<Character, String[]> map, String line, final int L, final int ROW) {
-        for (int i = 0; i < 26; i++) {
-            String[] rows = map.get((char) ('a' + i));
-            rows[ROW] = line.substring(0, L);
-            line = line.substring(L);
-        }
-        String[] rows = map.get(UNKNOW_KEY);
-        rows[ROW] = line.substring(0, L);
-    }
+	private static void showTextInAsciiArt(final String text, final int letterHeight, final Map<Character, String[]> alphabetMapping) {
+		final char[] textInLowerCase = text.toLowerCase().toCharArray();
+		for (int rowIndex = 0; rowIndex < letterHeight; rowIndex++) {
+			final StringBuilder buf = new StringBuilder("");
+			for (char character : textInLowerCase) {
+				String[] characterMapping = alphabetMapping.get(character);
+				if (characterMapping == null) {
+					characterMapping = alphabetMapping.get(UNKNOWN_KEY);
+				}
+				buf.append(characterMapping[rowIndex]);
+			}
+			System.out.println(buf.toString());
+		}
+	}
 
-    private static Map<Character, String[]> initMapping(final int H) {
-        Map<Character, String[]> map = new HashMap<>(27);
-        for (int i = 0; i < 26; ++i) {
-            map.put((char) ('a' + i), new String[H]);
-        }
-        map.put(UNKNOW_KEY, new String[H]);
-        return map;
-    }
+	private static Map<Character, String[]> initAlphabetMapping(final int letterHeight) {
+		final Map<Character, String[]> map = new HashMap<>(27);
+		for (int i = 0; i < NB_LETTERS_IN_ALPHABET; ++i) {
+			map.put(getLetter(i), new String[letterHeight]);
+		}
+		map.put(UNKNOWN_KEY, new String[letterHeight]);
+		return map;
+	}
+
+	private static void addRowToMapping(final Map<Character, String[]> alphabetMapping, String row, final int letterWidth, final int rowIndex) {
+		for (int i = 0; i < NB_LETTERS_IN_ALPHABET; i++) {
+			final String[] rows = alphabetMapping.get(getLetter(i));
+			rows[rowIndex] = headRow(row, letterWidth);
+			row = tailRow(row, letterWidth);
+		}
+		final String[] rows = alphabetMapping.get(UNKNOWN_KEY);
+		rows[rowIndex] = headRow(row, letterWidth);
+	}
+
+	private static String tailRow(final String row, final int letterWidth) {
+		return row.substring(letterWidth);
+	}
+
+	private static String headRow(final String row, final int letterWidth) {
+		return row.substring(0, letterWidth);
+	}
+
+	private static char getLetter(final int i) {
+		return (char) ('a' + i);
+	}
 }

@@ -6,58 +6,80 @@ import static java.lang.String.format;
 
 class Player {
 
-    public static void main(String args[]) {
-        Scanner in = new Scanner(System.in);
-        int width = in.nextInt(); // the number of cells on the X axis
-        in.nextLine();
-        int height = in.nextInt(); // the number of cells on the Y axis
-        in.nextLine();
-        char[][] map = new char[height][width];
-        for (int y = 0; y < height; ++y) {
-            String line = in.nextLine(); // width characters, each either 0 or .
-            for (int x = 0; x < width; ++x) {
-                map[y][x] = line.charAt(x);
-            }
-        }
+	private static final char POWER_NODE = '0';
 
+	private static final int NEIGHBOUR_NOT_FOUND = -1;
 
-        for (int y = 0; y < height; ++y) {
-            for (int x = 0; x < width; ++x) {
-                if (isPowerNode(map[y][x])) {
-                    final int x1 = getHorizontalNeighbor(map[y], x + 1);
-                    final int y1 = x1 != -1 ? y : -1;
+	public static void main(final String args[]) {
+		final Scanner in = new Scanner(System.in);
+		final int width = in.nextInt(); // the number of cells on the X axis
+		in.nextLine();
+		final int height = in.nextInt(); // the number of cells on the Y axis
+		in.nextLine();
+		final char[][] map = new char[height][width];
+		for (int y = 0; y < height; ++y) {
+			final String line = in.nextLine(); // width characters, each either 0 or .
+			final char[] mapRow = map[y];
+			for (int x = 0; x < width; ++x) {
+				mapRow[x] = line.charAt(x);
+			}
+		}
 
-                    final int y2 = getVerticalNeighbor(map, y + 1, x);
-                    final int x2 = y2 != -1 ? x : -1;
-                    // Three coordinates: a node, its right neighbor, its bottom neighbor
-                    System.out.println(format("%d %d %d %d %d %d", x, y, x1, y1, x2, y2));
-                }
-            }
-        }
-    }
+		showPowerNodeNeighbours(map);
+	}
 
-    private static int getVerticalNeighbor(char[][] map, int y, int x) {
-        if (y < map.length) {
-            if (isPowerNode(map[y][x])) {
-                return y;
-            }
-            return getVerticalNeighbor(map, y + 1, x);
-        }
-        return -1;
-    }
+	private static void showPowerNodeNeighbours(final char[][] map) {
+		for (int y = 0, height = map.length; y < height; ++y) {
+			final char[] line = map[y];
+			for (int x = 0, width = line.length; x < width; ++x) {
+				if (isPowerNode(line[x])) {
+					final String rightNeighbourPosition = getRightNeighbourPosition(line, x, y);
+					final String bottomNeighbourPosition = getBottomNeighbourPosition(map, x, y);
 
-    private static int getHorizontalNeighbor(char[] mapLine, int x) {
-        if (x < mapLine.length) {
-            if (isPowerNode(mapLine[x])) {
-                return x;
-            }
-            return getHorizontalNeighbor(mapLine, x + 1);
-        }
-        return -1;
-    }
+					// Three coordinates: a node, its right neighbour, its bottom neighbour
+					System.out.println(format("%s %s %s", positionAsString(x, y), rightNeighbourPosition, bottomNeighbourPosition));
+				}
+			}
+		}
+	}
 
-    private static boolean isPowerNode(char node) {
-        return node == '0';
-    }
+	private static String getBottomNeighbourPosition(final char[][] map, final int x, final int y) {
+		final int y2 = findBottomNeighbour(map, y + 1, x);
+		final int x2 = y2 != NEIGHBOUR_NOT_FOUND ? x : NEIGHBOUR_NOT_FOUND;
+		return positionAsString(x2, y2);
+	}
 
+	private static String getRightNeighbourPosition(final char[] line, final int x, final int y) {
+		final int x1 = findRightNeighbour(line, x + 1);
+		final int y1 = x1 != NEIGHBOUR_NOT_FOUND ? y : NEIGHBOUR_NOT_FOUND;
+		return positionAsString(x1, y1);
+	}
+
+	private static int findBottomNeighbour(char[][] map, int y, int x) {
+		if (y < map.length) {
+			if (isPowerNode(map[y][x])) {
+				return y;
+			}
+			return findBottomNeighbour(map, y + 1, x);
+		}
+		return NEIGHBOUR_NOT_FOUND;
+	}
+
+	private static int findRightNeighbour(char[] mapLine, int x) {
+		if (x < mapLine.length) {
+			if (isPowerNode(mapLine[x])) {
+				return x;
+			}
+			return findRightNeighbour(mapLine, x + 1);
+		}
+		return NEIGHBOUR_NOT_FOUND;
+	}
+
+	private static String positionAsString(final int x, final int y) {
+		return format("%d %d", x, y);
+	}
+
+	private static boolean isPowerNode(final char node) {
+		return node == POWER_NODE;
+	}
 }

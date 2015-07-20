@@ -7,25 +7,29 @@ import java.util.Scanner;
 
 class Solution {
 
-    public static void main(String args[]) {
-        Scanner in = new Scanner(System.in);
-        int N = in.nextInt(); // Number N of horses
-        List<Integer> strengths = new ArrayList<>();
-        for (int i = 0; i < N; i++) {
-            strengths.add(in.nextInt()); // the strength of an horse
-        }
+	public static void main(final String args[]) {
+		final Scanner in = new Scanner(System.in);
+		final int numberOfHorses = in.nextInt(); // Number N of horses
+		final List<Integer> horsesStrengths = new ArrayList<>();
+		for (int i = 0; i < numberOfHorses; i++) {
+			horsesStrengths.add(in.nextInt()); // the strength of an horse
+		}
 
-        Collections.sort(strengths);
+		Collections.sort(horsesStrengths);
 
-        int prev = Integer.MAX_VALUE;
-        int minimumDifference = Integer.MAX_VALUE;
-        for (Integer Pi : strengths) {
-            int currentDifference = Pi < prev ? prev - Pi : Pi - prev;
-            if (currentDifference < minimumDifference) {
-                minimumDifference = currentDifference;
-            }
-            prev = Pi;
-        }
-        System.out.println(minimumDifference);
-    }
+		int previousStrength = Integer.MAX_VALUE;
+		int minimalDifference = Integer.MAX_VALUE;
+		for (Integer strength : horsesStrengths) {
+			final int difference = getDifference(previousStrength, strength);
+			if (difference < minimalDifference) {
+				minimalDifference = difference;
+			}
+			previousStrength = strength;
+		}
+		System.out.println(minimalDifference);
+	}
+
+	private static int getDifference(final int previousStrength, final int strength) {
+		return strength < previousStrength ? previousStrength - strength : strength - previousStrength;
+	}
 }

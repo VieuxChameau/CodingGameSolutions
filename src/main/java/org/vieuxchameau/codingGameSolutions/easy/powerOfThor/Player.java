@@ -4,51 +4,42 @@ import java.util.Scanner;
 
 class Player {
 
-    public static void main(String args[]) {
-        Scanner in = new Scanner(System.in);
-        int LX = in.nextInt(); // the X position of the light of power
-        int LY = in.nextInt(); // the Y position of the light of power
-        int TX = in.nextInt(); // Thor's starting X position
-        int TY = in.nextInt(); // Thor's starting Y position
+	private static final String UP = "N";
 
-        while (true) {
-            in.nextInt();
+	private static final String DOWN = "S";
 
-            if (LX == TX) {
-                if (TY > LY) {
-                    System.out.println("N");
-                    TY -= 1;
-                } else {
-                    System.out.println("S");
-                    TY += 1;
-                }
-            } else if (LY == TY) {
-                if (TX > LX) {
-                    System.out.println("W");
-                    TX -= 1;
-                } else {
-                    System.out.println("E");
-                    TX += 1;
-                }
-            } else {
-                String d = "";
-                if (TY > LY) {
-                    d += "N";
-                    TY -= 1;
-                } else {
-                    d += "S";
-                    TY += 1;
-                }
+	private static final String LEFT = "W";
 
-                if (TX > LX) {
-                    d += "W";
-                    TX -= 1;
-                } else {
-                    d += "E";
-                    TX += 1;
-                }
-                System.out.println(d);
-            }
-        }
-    }
+	private static final String RIGHT = "E";
+
+	public static void main(final String args[]) {
+		final Scanner in = new Scanner(System.in);
+		final int lightHorizontalPosition = in.nextInt(); // the X position of the light of power
+		final int lightVerticalPosition = in.nextInt(); // the Y position of the light of power
+		int thorHorizontalPosition = in.nextInt(); // Thor's starting X position
+		int thorVerticalPosition = in.nextInt(); // Thor's starting Y position
+
+		while (true) {
+			in.nextInt(); // The level of Thor's remaining energy, representing the number of moves he can still make.
+
+			String directionToMove = "";
+			if (thorVerticalPosition > lightVerticalPosition) {
+				directionToMove = UP;
+				thorVerticalPosition -= 1;
+			} else if (thorVerticalPosition < lightVerticalPosition) {
+				directionToMove = DOWN;
+				thorVerticalPosition += 1;
+			}
+
+			if (thorHorizontalPosition > lightHorizontalPosition) {
+				directionToMove += LEFT;
+				thorHorizontalPosition -= 1;
+			} else if (thorHorizontalPosition < lightHorizontalPosition) {
+				directionToMove += RIGHT;
+				thorHorizontalPosition += 1;
+			}
+
+			System.out.println(directionToMove);
+		}
+	}
 }

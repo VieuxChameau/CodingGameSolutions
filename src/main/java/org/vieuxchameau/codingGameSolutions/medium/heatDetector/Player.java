@@ -4,69 +4,70 @@ import java.util.Scanner;
 
 class Player {
 
-    public static void main(String args[]) {
-        Scanner in = new Scanner(System.in);
-        int W = in.nextInt(); // width of the building.
-        int H = in.nextInt(); // height of the building.
-        int N = in.nextInt(); // maximum number of turns before game over.
-        int X0 = in.nextInt(); // batman horizontal pos
-        int Y0 = in.nextInt(); // batman vertical pos
+	public static void main(final String args[]) {
+		final Scanner in = new Scanner(System.in);
+		final int buildingWidth = in.nextInt(); // width of the building.
+		final int buildingHeight = in.nextInt(); // height of the building.
+		in.nextInt(); // maximum number of turns before game over.
+		int batmanHorizontalPosition = in.nextInt(); // batman horizontal pos
+		int batmanVerticalPosition = in.nextInt(); // batman vertical pos
 
-        Range xRange = new Range(0, W);
-        Range yRange = new Range(0, H);
-        while (true) {
-            String BOMB_DIR = in.next(); // the direction of the bombs from batman's current location (U, UR, R, DR, D, DL, L or UL)
-            adaptXRange(X0, xRange, BOMB_DIR);
-            adaptYRange(Y0, yRange, BOMB_DIR);
-            X0 = xRange.getMidRange();
-            Y0 = yRange.getMidRange();
-            System.out.println(X0 + " " + Y0); // the location of the next window Batman should jump to.
-        }
-    }
+		final Range horizontalRange = new Range(0, buildingWidth);
+		final Range verticalRange = new Range(0, buildingHeight);
+		while (true) {
+			final String bombDirection = in.next(); // the direction of the bombs from batman's current location (U, UR, R, DR, D, DL, L or UL)
+			adaptHorizontalRange(batmanHorizontalPosition, horizontalRange, bombDirection);
+			adaptVerticalRange(batmanVerticalPosition, verticalRange, bombDirection);
+			batmanHorizontalPosition = horizontalRange.getMidRange();
+			batmanVerticalPosition = verticalRange.getMidRange();
+			System.out.println(batmanHorizontalPosition + " " + batmanVerticalPosition); // the location of the next window Batman should jump to.
+		}
+	}
 
-    private static void adaptYRange(int y, Range yRange, String bomb_dir) {
-        if (bomb_dir.contains("U")) {
-            yRange.setMax(y);
-        } else if (bomb_dir.contains("D")) {
-            yRange.setMin(y);
-        } else {
-            yRange.close(y);
-        }
-    }
+	private static void adaptVerticalRange(final int batmanVerticalPosition, final Range verticalRange, final String bombDirection) {
+		if (bombDirection.contains("U")) {
+			verticalRange.setMax(batmanVerticalPosition);
+		} else if (bombDirection.contains("D")) {
+			verticalRange.setMin(batmanVerticalPosition);
+		} else {
+			verticalRange.close(batmanVerticalPosition);
+		}
+	}
 
-    private static void adaptXRange(int x, Range xRange, String bomb_dir) {
-        if (bomb_dir.contains("L")) {
-            xRange.setMax(x);
-        } else if (bomb_dir.contains("R")) {
-            xRange.setMin(x);
-        } else {
-            xRange.close(x);
-        }
-    }
+	private static void adaptHorizontalRange(final int batmanHorizontalPosition, final Range horizontalRange, final String bombDirection) {
+		if (bombDirection.contains("L")) {
+			horizontalRange.setMax(batmanHorizontalPosition);
+		} else if (bombDirection.contains("R")) {
+			horizontalRange.setMin(batmanHorizontalPosition);
+		} else {
+			horizontalRange.close(batmanHorizontalPosition);
+		}
+	}
 
-    static class Range {
-        private int min;
-        private int max;
+	static class Range {
+		private int min;
 
-        Range(int min, int max) {
-            this.min = min;
-            this.max = max;
-        }
+		private int max;
 
-        int getMidRange() {
-            return min == max ? min : ((max - min) / 2) + min;
-        }
+		Range(final int min, final int max) {
+			this.min = min;
+			this.max = max;
+		}
 
-        public void close(int x) {
-            min = max = x;
-        }
+		int getMidRange() {
+			return min == max ? min : ((max - min) / 2) + min;
+		}
 
-        public void setMax(int max) {
-            this.max = max;
-        }
+		void close(int x) {
+			min = max = x;
+		}
 
-        public void setMin(int min) {
-            this.min = min;
-        }
-    }
+		void setMax(int max) {
+			this.max = max;
+		}
+
+		void setMin(int min) {
+			this.min = min;
+		}
+	}
 }

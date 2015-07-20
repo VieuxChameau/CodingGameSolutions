@@ -2,27 +2,30 @@ package org.vieuxchameau.codingGameSolutions.easy.theDescent;
 
 import java.util.Scanner;
 
+import static java.lang.Integer.MIN_VALUE;
+
 class Player {
 
-    public static void main(String args[]) {
-        Scanner in = new Scanner(System.in);
+	private static final int NUMBER_OF_MOUNTAINS = 8;
 
-        while (true) {
-            int SX = in.nextInt();
-            in.nextInt(); // SY
+	public static void main(final String args[]) {
+		final Scanner in = new Scanner(System.in);
 
-            int max = -1;
-            int index = -1;
-            for (int i = 0; i < 8; i++) {
-                // represents the height of one mountain, from 9 to 0. Mountain heights are provided from left to right.
-                int MH = in.nextInt();
-                if (MH > max) {
-                    max = MH;
-                    index = i;
-                }
-            }
+		while (true) {
+			final int shipPosition = in.nextInt(); // the horizontal coordinate of your ship (0 to 7).
+			in.nextInt(); // SY : the altitude at which your ship is advancing in kilometers (10 to 1).
 
-            System.out.println(SX == index ? "FIRE" : "HOLD");
-        }
-    }
+			int maximalHeight = MIN_VALUE;
+			int positionToFire = -1;
+			for (int i = 0; i < NUMBER_OF_MOUNTAINS; i++) {
+				final int mountainHeight = in.nextInt(); // represents the height of one mountain, from 9 to 0. Mountain heights are provided from left to right.
+				if (mountainHeight > maximalHeight) {
+					maximalHeight = mountainHeight;
+					positionToFire = i;
+				}
+			}
+
+			System.out.println(shipPosition == positionToFire ? "FIRE" : "HOLD");
+		}
+	}
 }

@@ -4,16 +4,16 @@ import java.util.Scanner;
 
 class Player {
 
-    public static void main(String args[]) {
-        Scanner in = new Scanner(System.in);
+	public static void main(final String args[]) {
+		final Scanner in = new Scanner(System.in);
 
-        while (true) {
-            String enemy1 = in.next(); // name of enemy 1
-            int dist1 = in.nextInt(); // distance to enemy 1
-            String enemy2 = in.next(); // name of enemy 2
-            int dist2 = in.nextInt(); // distance to enemy 2
+		while (true) {
+			final String firstEnemyName = in.next(); // name of enemy 1
+			final int firstEnemyDistance = in.nextInt(); // distance to enemy 1
+			final String secondEnemyName = in.next(); // name of enemy 2
+			final int secondEnemyDistance = in.nextInt(); // distance to enemy 2
 
-            System.out.println((dist1 < dist2) ? enemy1 : enemy2);
-        }
-    }
+			System.out.println((firstEnemyDistance < secondEnemyDistance) ? firstEnemyName : secondEnemyName);
+		}
+	}
 }
